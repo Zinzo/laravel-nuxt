@@ -3,20 +3,20 @@ const { join } = require('path')
 const { copySync, removeSync } = require('fs-extra')
 
 module.exports = {
-  mode: 'spa', // Comment this for SSR
+  // mode: 'spa', // Comment this for SSR
 
   srcDir: __dirname,
 
   env: {
     apiUrl: process.env.API_URL || process.env.APP_URL + '/api',
-    appName: process.env.APP_NAME || 'Laravel Nuxt',
+    appName: process.env.APP_NAME,
     appLocale: process.env.APP_LOCALE || 'en',
     githubAuth: !!process.env.GITHUB_CLIENT_ID
   },
 
   head: {
     title: process.env.APP_NAME,
-    titleTemplate: '%s - ' + process.env.APP_NAME,
+    titleTemplate: '%s',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -42,9 +42,7 @@ module.exports = {
     '~plugins/i18n',
     '~plugins/vform',
     '~plugins/axios',
-    '~plugins/fontawesome',
-    '~plugins/nuxt-client-init', // Comment this for SSR
-    { src: '~plugins/bootstrap', mode: 'client' }
+    // '~plugins/nuxt-client-init', // Comment this for SSR
   ],
 
   modules: [
@@ -52,12 +50,24 @@ module.exports = {
   ],
 
   build: {
-    extractCSS: true
+    extractCSS: true,
+    extend(config, ctx) {
+      if (ctx.isDev && ctx.isClient) {
+        if (!config.module) config.module = { rules: [] }
+        config.module.rules.push({
+          enforce: 'pre',
+          test: /\.(js|vue)$/,
+          loader: 'eslint-loader',
+          exclude: /(node_modules)/
+        })
+      }
+    }
   },
 
   hooks: {
     build: {
       done (builder) {
+        console.log(builder.nuxt.options.rootDir);
         // Copy dist files to public/_nuxt
         if (builder.nuxt.options.dev === false && builder.nuxt.options.mode === 'spa') {
           const publicDir = join(builder.nuxt.options.rootDir, 'public', '_nuxt')

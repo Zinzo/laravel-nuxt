@@ -1,6 +1,9 @@
 <template>
   <div class="layout">
-    <navbar />
+    <header>
+      헤더 입니다.
+      <nav>test</nav>
+    </header>
 
     <div class="container mt-4">
       <nuxt />
@@ -9,11 +12,7 @@
 </template>
 
 <script>
-import Navbar from '~/components/Navbar'
-
 export default {
-  components: {
-    Navbar
-  }
+  components: { }
 }
 </script>

@@ -1,15 +1,18 @@
 <template>
-  <card :title="$t('home')">
-    {{ $t('you_are_logged_in') }}
-  </card>
+  <div>
+    <div>
+      test {{name}}
+    </div>
+  </div>
 </template>
 
-<script>
-export default {
-  middleware: 'auth',
+<script lang="ts">
+import { Component, Vue } from 'nuxt-property-decorator'
 
-  head () {
-    return { title: this.$t('home') }
-  }
+@Component({
+  components:{ }
+})
+export default class Home extends Vue {
+  name: string = 'hello-next-decorator';
 }
 </script>
